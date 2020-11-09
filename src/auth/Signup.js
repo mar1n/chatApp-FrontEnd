@@ -10,7 +10,7 @@ const Signup = () => {
   const [values, setValues] = useState({
     name: "",
     email: "",
-    country: "",
+    country: "United Kingdom",
     password: "",
     buttonText: "Submit",
   });

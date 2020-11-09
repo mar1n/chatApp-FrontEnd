@@ -34,19 +34,45 @@ const Layout = ({ children, match, history }) => {
       )}
 
       {isAuth() && isAuth().role === "admin" && (
-        <li className="nav-item">
-          <Link className="nav-link" style={isActive("/admin")} to="/admin">
-            {isAuth().name}
-          </Link>
-        </li>
+        <>
+          <li className="nav-item">
+            <Link className="nav-link" style={isActive("/admin")} to="/admin">
+              {isAuth().name}
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              to="/extra"
+              className="nav-link chat-link"
+              style={isActive("/extra")}
+            >
+              Chat
+            </Link>
+          </li>
+        </>
       )}
 
       {isAuth() && isAuth().role === "subscriber" && (
-        <li className="nav-item">
-          <Link className="nav-link" style={isActive("/private")} to="/private">
-            {isAuth().name}
-          </Link>
-        </li>
+        <>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              style={isActive("/private")}
+              to="/private"
+            >
+              {isAuth().name}
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              to="/extra"
+              className="nav-link chat-link"
+              style={isActive("/extra")}
+            >
+              Chat
+            </Link>
+          </li>
+        </>
       )}
       {isAuth() && (
         <li className="nav-item">

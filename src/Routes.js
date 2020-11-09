@@ -21,9 +21,9 @@ const Routes = () => {
         <Route path="/signin" exact component={Signin} />
         <Route path="/auth/activate/:token" exact component={Activate} />
         <PrivateRoute path="/private" exact component={Private} />
+        <PrivateRoute path="/extra" exact component={Extra} />
         <AdminRoute path="/admin" exact component={Admin} />
         <Route path="/auth/password/forgot" exact component={Forgot} />
-        <Route path="/extra" exact component={Extra} />
         <Route path="/auth/password/reset/:token" exact component={Reset} />
         <Route
           component={() => (

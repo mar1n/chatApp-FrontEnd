@@ -17,6 +17,7 @@ const Private = ({ history }) => {
   const token = getCookie("token");
 
   useEffect(() => {
+    console.log('private');
     loadProfile();
   }, []);
 
