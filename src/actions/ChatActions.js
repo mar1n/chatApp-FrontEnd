@@ -1,3 +1,6 @@
+import axios from "axios";
+import { ITEMS_LOADING, READ_USER } from "./types";
+import { isAuth, getCookie } from "../auth/helpers";
 export function deleteMessage(id) {
   return {
     type: "DELETE_MESSAGE",
@@ -35,3 +38,26 @@ export function switchUser(id) {
     id: id,
   };
 }
+
+export const readUsers = () => (dispatch) => {
+  dispatch(setItemsLoading);
+  const token = getCookie("token");
+  axios
+    .get(`${process.env.REACT_APP_API}/user/readAll/${isAuth()._id}`, {
+      headers: {
+        Authorization: "Bearer " + token, //the token is a variable which holds the token
+      },
+    })
+    .then((res) =>
+      dispatch({
+        type: READ_USER,
+        payload: res.data,
+      })
+    );
+};
+
+export const setItemsLoading = () => {
+  return {
+    type: ITEMS_LOADING,
+  };
+};

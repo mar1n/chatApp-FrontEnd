@@ -1,4 +1,4 @@
-import { GET_ITEMS, ADD_ITEM, DELETE_ITEM, ITEMS_LOADING } from '../actions/types';
+import { GET_ITEMS, ADD_ITEM, DELETE_ITEM, ITEMS_LOADING, READ_USER } from '../actions/types';
 
 const initialState = {
   items: [],
@@ -13,6 +13,13 @@ export default function ItemReducer(state = initialState, action) {
         items: action.payload,
         loading: false
       };
+    case READ_USER:
+      console.log('read user')
+      return {
+        ...state,
+        items: action.payload,
+        loading: false
+      }
     case DELETE_ITEM:
         return {
             ...state,
