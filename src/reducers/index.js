@@ -1,14 +1,40 @@
 import { combineReducers } from "redux";
 import ItemReducer from "./ItemReducer";
+import { ROOMS_LOADING } from "../actions/types";
 import { v4 as uuid } from "uuid";
 
 export default combineReducers({
   item: ItemReducer,
+  threads: threadsReducer,
   activeThreadId: activeThreadIdReducer,
   loginUserId: loginUserIdReducer,
-  threads: threadsReducer,
+  newThread: newThreadReducer,
+  closeThread: closeThreadReducer,
   users: usersReducer,
 });
+
+function closeThreadReducer(state = true, action) {
+  if (action.type === "CLOSE_THREAD") {
+    console.log("close Thread");
+    return false;
+  } else if (action.type === "OPEN_THREAD") {
+    return true;
+  } else {
+    return state;
+  }
+}
+
+function newThreadReducer(state = true, action) {
+  if (action.type === "ADD_NEWUSER") {
+    return false;
+  } else if (action.type === "OPEN_THREAD") {
+    return true;
+  } else if (action.type === "ADD_NEWTHREAD") {
+    return false;
+  } else {
+    return state;
+  }
+}
 
 function usersReducer(
   state = [{ name: "Buzz Aldrin" }, { name: "Michael Collins" }],
@@ -43,7 +69,7 @@ function findThreadIndex(threads, action) {
     }
     case "DELETE_MESSAGE": {
       return threads.findIndex((t) =>
-        t.messages.msg.find((m) => m.id === action.id)
+        t.messages.find((m) => m.id === action.id)
       );
     }
     default: {
@@ -52,18 +78,9 @@ function findThreadIndex(threads, action) {
   }
 }
 
+
 function threadsReducer(
   state = [
-    {
-      id: "1-fca2",
-      title: "Buzz Aldrin",
-      friend: "2-be91",
-      users: [
-        { id: "1-fca2", title: "Buzz Aldrin" },
-        { id: "2-be91", title: "Michael Collins" },
-      ],
-      messages: messagesReducer(undefined, {}),
-    },
     {
       id: "3-xz25",
       title: "All",
@@ -74,10 +91,31 @@ function threadsReducer(
       ],
       messages: messagesReducer(undefined, {}),
     },
+
   ],
   action
 ) {
   switch (action.type) {
+    case ROOMS_LOADING: {
+       console.log('read rooms')
+       console.log(action.payload)
+      return [...state,...action.payload];
+    }
+    case "ADD_NEWTHREAD": {
+      return [
+        {
+          id: uuid(),
+          title: action.user1,
+          friend: "2-qweassd",
+          users: [
+            { id: "1-fca2", title: action.user1 },
+            { id: "2-be91", title: action.user2 },
+          ],
+          messages: messagesReducer(undefined, {}),
+        },
+        ...state,
+      ];
+    }
     case "ADD_MESSAGE":
     case "RESET_MESSAGE":
     case "DELETE_MESSAGE": {
@@ -101,15 +139,12 @@ function threadsReducer(
   }
 }
 
-function messagesReducer(state = { counter: 0, msg: [] }, action) {
+function messagesReducer(state = [], action) {
   switch (action.type) {
     case "RESET_MESSAGE": {
-      return {
-        counter: 0,
-        msg: state.msg.map((msg) =>
-          msg.name !== action.name ? { ...msg, unread: true } : msg
-        ),
-      };
+      return state.map((msg) =>
+        msg.name !== action.name ? { ...msg, unread: true } : msg
+      );
     }
     case "ADD_MESSAGE": {
       const newMessage = {
@@ -119,16 +154,10 @@ function messagesReducer(state = { counter: 0, msg: [] }, action) {
         id: uuid(),
         unread: false,
       };
-      return {
-        counter: state.counter + 1,
-        msg: state.msg.concat(newMessage),
-      };
+      return state.concat(newMessage);
     }
     case "DELETE_MESSAGE": {
-      return {
-        counter: state.counter ? state.counter - 1 : state.counter,
-        msg: state.msg.filter((m) => m.id !== action.id),
-      };
+      return state.filter((m) => m.id !== action.id);
     }
     default: {
       return state;

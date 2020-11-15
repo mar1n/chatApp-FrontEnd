@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { connect } from "react-redux";
-import { addMessage, resetUnreadmsg, deleteMessage } from "../actions/ChatActions";
+import { addMessage, resetUnreadmsg, deleteMessage, readRooms } from "../actions/ChatActions";
 import { isAuth, signout } from "../auth/helpers";
+
 class TextFieldSubmit extends React.Component {
   state = {
     value: "",
@@ -38,7 +39,7 @@ class TextFieldSubmit extends React.Component {
 
 const MessageList = (props) => (
   <div className="ui comments">
-    {props.messages.msg.map((m, index) => (
+    {props.messages.map((m, index) => (
       <div className="comment" key={index} onClick={() => props.onClick(m.id)}>
         <div className="text">
           {m.name}:{m.text}
@@ -48,7 +49,7 @@ const MessageList = (props) => (
     ))}
     <div
       className={
-        props.messages.msg.reduce(
+        props.messages.reduce(
           (accu, current) =>
             current.unread === false && current.name !== props.user
               ? accu + 1
@@ -65,17 +66,19 @@ const MessageList = (props) => (
   </div>
 );
 
-const Thread = (props) => (
-  <div className="ui center aligned basic segment">
-    <MessageList
-      messages={props.thread.messages}
-      user={props.userId}
-      onClick={props.onMessageClick}
-      onRead={() => props.onRead(props.thread.id, props.userId)}
-    />
-    <TextFieldSubmit onSubmit={props.onMessageSubmit} />
-  </div>
-);
+const Thread = (props) =>{
+  return (
+  props.close && (
+    <div className="ui center aligned basic segment">
+      <MessageList
+        messages={props.thread.messages}
+        user={props.userId}
+        onClick={props.onMessageClick}
+        onRead={() => props.onRead(props.thread.id, props.userId)}
+      />
+      <TextFieldSubmit onSubmit={props.onMessageSubmit} />
+    </div>
+  ))}
 
 const mapStateToThreadProps = (state) => ({
   thread: state.threads.find((t) => {
@@ -88,13 +91,14 @@ const mapStateToThreadProps = (state) => ({
     return null;
   }),
   userId: state.loginUserId,
+  close: state.closeThread,
 });
 
-const mapDispatchToThreadProps = (dispatch) => ({
-  onMessageClick: (id) => dispatch(deleteMessage(id)),
-  onRead: (id, name) => dispatch(resetUnreadmsg(id, name)),
-  dispatch: dispatch,
-});
+// const mapDispatchToThreadProps = (dispatch) => ({
+//   onMessageClick: (id) => dispatch(deleteMessage(id)),
+//   onRead: (id, name) => dispatch(resetUnreadmsg(id, name)),
+//   dispatch: dispatch,
+// });
 
 function mergeThreadProps(stateProps, dispatchProps) {
   return {
@@ -109,7 +113,9 @@ function mergeThreadProps(stateProps, dispatchProps) {
 
 const ThreadDisplay = connect(
   mapStateToThreadProps,
-  mapDispatchToThreadProps,
+  {
+    readRooms
+  },
   mergeThreadProps
 )(Thread);
 

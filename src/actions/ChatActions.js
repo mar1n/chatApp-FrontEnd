@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ITEMS_LOADING, READ_USER } from "./types";
+import { ITEMS_LOADING, READ_USER, ROOMS_LOADING } from "./types";
 import { isAuth, getCookie } from "../auth/helpers";
 export function deleteMessage(id) {
   return {
@@ -49,10 +49,29 @@ export const readUsers = () => (dispatch) => {
       },
     })
     .then((res) =>
+    //console.log(res);
       dispatch({
         type: READ_USER,
         payload: res.data,
       })
+    );
+};
+
+export const readRooms = () => (dispatch) => {
+  dispatch(setItemsLoading);
+  const token = getCookie("token");
+  axios
+    .get(`${process.env.REACT_APP_API}/user/chat/room/${isAuth()._id}`, {
+      headers: {
+        Authorization: "Bearer " + token, //the token is a variable which holds the token
+      },
+    })
+    .then((res) =>{
+      console.log(res.data);
+      return dispatch({
+        type: ROOMS_LOADING,
+        payload: res.data,
+      })}
     );
 };
 
