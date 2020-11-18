@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import { connect } from "react-redux";
-import { addMessage, resetUnreadmsg, deleteMessage, readRooms } from "../actions/ChatActions";
+import { addMessage, resetUnreadmsg, deleteMessage, readRooms, addMessage2, deleteMessage2 } from "../actions/ChatActions";
 import { isAuth, signout } from "../auth/helpers";
 
 class TextFieldSubmit extends React.Component {
@@ -40,7 +40,7 @@ class TextFieldSubmit extends React.Component {
 const MessageList = (props) => (
   <div className="ui comments">
     {props.messages.map((m, index) => (
-      <div className="comment" key={index} onClick={() => props.onClick(m.id)}>
+      <div className="comment" key={index} onClick={() => props.onClick(m._id)}>
         <div className="text">
           {m.name}:{m.text}
           <span className="metadata">@{m.timestamp}</span>
@@ -67,6 +67,7 @@ const MessageList = (props) => (
 );
 
 const Thread = (props) =>{
+  console.log(props.onSubmit);
   return (
   props.close && (
     <div className="ui center aligned basic segment">
@@ -94,11 +95,11 @@ const mapStateToThreadProps = (state) => ({
   close: state.closeThread,
 });
 
-// const mapDispatchToThreadProps = (dispatch) => ({
-//   onMessageClick: (id) => dispatch(deleteMessage(id)),
-//   onRead: (id, name) => dispatch(resetUnreadmsg(id, name)),
-//   dispatch: dispatch,
-// });
+const mapDispatchToThreadProps = (dispatch) => ({
+  //onMessageClick: (id) => dispatch(deleteMessage(id)),
+  onRead: (id, name) => dispatch(resetUnreadmsg(id, name)),
+  dispatch: dispatch,
+});
 
 function mergeThreadProps(stateProps, dispatchProps) {
   return {
@@ -106,16 +107,21 @@ function mergeThreadProps(stateProps, dispatchProps) {
     ...dispatchProps,
     onMessageSubmit: (text) =>
       dispatchProps.dispatch(
-        addMessage(text, stateProps.thread.id, isAuth().name)
+        addMessage2(text, stateProps.thread.id, isAuth().name)
       ),
+    onMessageClick: (id) => 
+        dispatchProps.dispatch(
+          deleteMessage2(stateProps.thread._id, id)
+        )
   };
 }
 
 const ThreadDisplay = connect(
   mapStateToThreadProps,
-  {
-    readRooms
-  },
+  // {
+  //   addMessage2
+  // },
+  mapDispatchToThreadProps,
   mergeThreadProps
 )(Thread);
 

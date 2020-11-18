@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import ItemReducer from "./ItemReducer";
-import { ROOMS_LOADING } from "../actions/types";
+import { ROOMS_LOADING, ADD_MESSAGE2, DELETE_MESSAGE2 } from "../actions/types";
 import { v4 as uuid } from "uuid";
 
 export default combineReducers({
@@ -64,9 +64,12 @@ function findThreadIndex(threads, action) {
     case "RESET_MESSAGE": {
       return threads.findIndex((t) => t.id === action.id);
     }
+    case ADD_MESSAGE2:
     case "ADD_MESSAGE": {
+      console.log(action.threadId);
       return threads.findIndex((t) => t.id === action.threadId);
     }
+    case DELETE_MESSAGE2:
     case "DELETE_MESSAGE": {
       return threads.findIndex((t) =>
         t.messages.find((m) => m.id === action.id)
@@ -118,9 +121,12 @@ function threadsReducer(
     }
     case "ADD_MESSAGE":
     case "RESET_MESSAGE":
+    case ADD_MESSAGE2:
+    case DELETE_MESSAGE2:
     case "DELETE_MESSAGE": {
-      const threadIndex = findThreadIndex(state, action);
 
+      const threadIndex = findThreadIndex(state, action);
+      console.log(state, action)
       const oldThread = state[threadIndex];
 
       const newThread = {
@@ -146,18 +152,20 @@ function messagesReducer(state = [], action) {
         msg.name !== action.name ? { ...msg, unread: true } : msg
       );
     }
+    case ADD_MESSAGE2:
     case "ADD_MESSAGE": {
-      const newMessage = {
-        text: action.text,
-        name: action.user,
-        timestamp: Date.now(),
-        id: uuid(),
-        unread: false,
-      };
-      return state.concat(newMessage);
+      // const newMessage = {
+      //   text: action.text,
+      //   name: action.user,
+      //   timestamp: Date.now(),
+      //   id: uuid(),
+      //   unread: false,
+      // };
+      return action.payload.messages;
     }
+    case DELETE_MESSAGE2:
     case "DELETE_MESSAGE": {
-      return state.filter((m) => m.id !== action.id);
+      return action.payload.messages;
     }
     default: {
       return state;
