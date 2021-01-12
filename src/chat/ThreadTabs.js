@@ -36,7 +36,6 @@ const mapStateToTabsProps = (state) => {
   const login = state.loginUserId;
   const tabId = state.activeThreadId;
   const tabs = state.threads
-    .filter((t) => t.users.find((t) => t.title === login))
     .map((t) => ({
       title: t.users,
       active: t.id === state.activeThreadId,

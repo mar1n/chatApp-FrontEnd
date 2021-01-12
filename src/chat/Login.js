@@ -8,7 +8,7 @@ class Login extends React.Component {
   };
   changeUser = (e) => {
     this.props.user(e.target.value);
-    this.props.default("3-xz25");
+    this.props.default(isAuth().name);
     this.setState({ user: e.target.value });
   };
   render() {

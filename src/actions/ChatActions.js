@@ -1,6 +1,7 @@
 import axios from "axios";
-import { ITEMS_LOADING, READ_USER, ROOMS_LOADING, ADD_MESSAGE2, DELETE_MESSAGE2 } from "./types";
+import { ITEMS_LOADING, READ_USER, ROOMS_LOADING, ADD_MESSAGE2, DELETE_MESSAGE2, UNREAD_MESSAGE2, ADD_THREAD } from "./types";
 import { isAuth, getCookie } from "../auth/helpers";
+
 export function deleteMessage(id) {
   return {
     type: "DELETE_MESSAGE",
@@ -109,6 +110,42 @@ export const deleteMessage2 = (roomId, messageId) => (dispatch) => {
       console.log(res.data);
       return dispatch({
         type: DELETE_MESSAGE2,
+        payload: res.data
+      })}
+    );
+};
+
+export const resetUnreadmsg2 = (roomId, name) => (dispatch) => {
+  dispatch(setItemsLoading);
+  const token = getCookie("token");
+  axios
+    .put(`${process.env.REACT_APP_API}/user/chat/room/message/${roomId}/${name}`, {
+      headers: {
+        Authorization: "Bearer " + token, //the token is a variable which holds the token
+      },
+    })
+    .then((res) =>{
+      console.log(res.data);
+      return dispatch({
+        type: UNREAD_MESSAGE2,
+        payload: res.data
+      })}
+    );
+};
+
+export const addNewThread = (users) => (dispatch) => {
+  dispatch(setItemsLoading);
+  const token = getCookie("token");
+  axios
+    .put(`${process.env.REACT_APP_API}/user/chat/room/add?${users}`, {
+      headers: {
+        Authorization: "Bearer " + token, //the token is a variable which holds the token
+      },
+    })
+    .then((res) =>{
+      console.log(res.data);
+      return dispatch({
+        type: ADD_THREAD,
         payload: res.data
       })}
     );

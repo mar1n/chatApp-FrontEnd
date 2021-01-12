@@ -7,3 +7,5 @@ export const READ_USER = "READ_USER";
 export const ROOMS_LOADING = "ROOMS_LOADING";
 export const ADD_MESSAGE2 = "ADD_MESSAGE2";
 export const DELETE_MESSAGE2 = "DELETE_MESSAGE2";
+export const UNREAD_MESSAGE2 = "UNREAD_MESSAGE2";
+export const ADD_THREAD = "ADD_THREAD";

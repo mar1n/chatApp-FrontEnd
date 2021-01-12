@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import ItemReducer from "./ItemReducer";
-import { ROOMS_LOADING, ADD_MESSAGE2, DELETE_MESSAGE2 } from "../actions/types";
+import { ROOMS_LOADING, ADD_MESSAGE2, DELETE_MESSAGE2, ADD_THREAD } from "../actions/types";
 import { v4 as uuid } from "uuid";
 
 export default combineReducers({
@@ -62,12 +62,12 @@ function activeThreadIdReducer(state = "3-xz25", action) {
 function findThreadIndex(threads, action) {
   switch (action.type) {
     case "RESET_MESSAGE": {
-      return threads.findIndex((t) => t.id === action.id);
+      return threads.findIndex((t) => t._id === action.id);
     }
     case ADD_MESSAGE2:
     case "ADD_MESSAGE": {
       console.log(action.threadId);
-      return threads.findIndex((t) => t.id === action.threadId);
+      return threads.findIndex((t) => t._id === action.threadId);
     }
     case DELETE_MESSAGE2:
     case "DELETE_MESSAGE": {
@@ -84,16 +84,16 @@ function findThreadIndex(threads, action) {
 
 function threadsReducer(
   state = [
-    {
-      id: "3-xz25",
-      title: "All",
-      friend: "1-fca2",
-      users: [
-        { id: "1-fca2", title: "Buzz Aldrin" },
-        { id: "2-be91", title: "Michael Collins" },
-      ],
-      messages: messagesReducer(undefined, {}),
-    },
+    // {
+    //   id: "3-xz25",
+    //   title: "All",
+    //   friend: "1-fca2",
+    //   users: [
+    //     { id: "1-fca2", title: "Buzz Aldrin" },
+    //     { id: "2-be91", title: "Michael Collins" },
+    //   ],
+    //   messages: messagesReducer(undefined, {}),
+    // },
 
   ],
   action
@@ -126,7 +126,7 @@ function threadsReducer(
     case "DELETE_MESSAGE": {
 
       const threadIndex = findThreadIndex(state, action);
-      console.log(state, action)
+      console.log('thread index',threadIndex);
       const oldThread = state[threadIndex];
 
       const newThread = {
