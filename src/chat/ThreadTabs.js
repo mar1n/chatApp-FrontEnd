@@ -14,16 +14,17 @@ const Tabs = (props) => {
           <div
             key={index}
             className={tab.active ? "active item" : "item"}
-            onClick={() => props.onClick(tab.id)}
+            onClick={() => props.onClick(tab.title)}
           >
-            {tab.id === "3-xz25"
+            {/* {tab.id === "3-xz25"
               ? "All"
               : tab.title.find((t) => {
                   if (t.title !== props.login) {
                     return t.title;
                   }
                   return null;
-                }).title}
+                }).title} */}
+                {tab.title}
             <span>{tab.unreadmsg}</span>
           </div>
         );
@@ -37,8 +38,8 @@ const mapStateToTabsProps = (state) => {
   const tabId = state.activeThreadId;
   const tabs = state.threads
     .map((t) => ({
-      title: t.users,
-      active: t.id === state.activeThreadId,
+      title: t.title,
+      active: t.title === state.activeThreadId,
       id: t.id,
       unreadmsg: t.messages.reduce(
         (accu, current) =>

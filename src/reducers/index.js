@@ -51,7 +51,7 @@ function loginUserIdReducer(state = "Buzz Aldrin", action) {
   }
 }
 
-function activeThreadIdReducer(state = "3-xz25", action) {
+function activeThreadIdReducer(state = null, action) {
   if (action.type === "OPEN_THREAD") {
     return action.id;
   } else {
@@ -71,8 +71,12 @@ function findThreadIndex(threads, action) {
     }
     case DELETE_MESSAGE2:
     case "DELETE_MESSAGE": {
+      console.log('findThreadIndex threads', threads);
+      console.log('findThreadIndex action', action);
+      console.log('action.id', action.threadId);
+      console.log('action.messageId', action.messageId);
       return threads.findIndex((t) =>
-        t.messages.find((m) => m.id === action.id)
+        t.messages.find((m) => m._id === action.messageId)
       );
     }
     default: {
@@ -128,7 +132,7 @@ function threadsReducer(
       const threadIndex = findThreadIndex(state, action);
       console.log('thread index',threadIndex);
       const oldThread = state[threadIndex];
-
+      console.log('oldThread', oldThread);
       const newThread = {
         ...oldThread,
         messages: messagesReducer(oldThread.messages, action),
@@ -165,6 +169,8 @@ function messagesReducer(state = [], action) {
     }
     case DELETE_MESSAGE2:
     case "DELETE_MESSAGE": {
+      console.log('delete messsage2 state', state);
+      console.log('delete messsage2 action', action);
       return action.payload.messages;
     }
     default: {

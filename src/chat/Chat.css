@@ -4,3 +4,6 @@
 .selectUser {
     background-color: blueviolet;
 }
+.active {
+    background-color: aqua;
+}

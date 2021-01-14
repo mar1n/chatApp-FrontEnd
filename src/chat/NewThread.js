@@ -1,5 +1,6 @@
 import React from "react";
 import { readUsers, readRooms, addNewThread } from "../actions/ChatActions";
+import { isAuth } from "../auth/helpers";
 import { connect } from "react-redux";
 
 class AddThread extends React.Component {
@@ -30,7 +31,7 @@ class AddThread extends React.Component {
   }
 
   addThread() {
-    let users = this.state.group;
+    let users = [{ title: isAuth().name}, ...this.state.group];
     let qs = Object.keys(users)
       .map((key) => `users[${key}][title]=${users[key].title}`)
       .join("&");

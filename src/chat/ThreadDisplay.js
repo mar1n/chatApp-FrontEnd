@@ -83,7 +83,7 @@ const Thread = (props) =>{
   ))}
 
 const mapStateToThreadProps = (state) => ({
-  thread: state.threads[0],
+  thread: state.threads.find(thread => thread.title === state.activeThreadId),
   userId: state.loginUserId,
   close: state.closeThread,
 });
@@ -102,10 +102,13 @@ function mergeThreadProps(stateProps, dispatchProps) {
       dispatchProps.dispatch(
         addMessage2(text, stateProps.thread._id, isAuth().name)
       ),
-    onMessageClick: (id) => 
-        dispatchProps.dispatch(
+    onMessageClick: (id) => {
+      console.log('thread id', stateProps.thread._id);
+      console.log('message id', id);
+       return dispatchProps.dispatch(
           deleteMessage2(stateProps.thread._id, id)
         )
+    }
   };
 }
 

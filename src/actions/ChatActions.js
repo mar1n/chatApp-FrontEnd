@@ -41,6 +41,7 @@ export function switchUser(id) {
 }
 
 export const readUsers = () => (dispatch) => {
+  console.log('name', isAuth().name);
   dispatch(setItemsLoading);
   const token = getCookie("token");
   axios
@@ -62,7 +63,7 @@ export const readRooms = () => (dispatch) => {
   dispatch(setItemsLoading);
   const token = getCookie("token");
   axios
-    .get(`${process.env.REACT_APP_API}/user/chat/room/${isAuth()._id}`, {
+    .get(`${process.env.REACT_APP_API}/user/chat/room/${isAuth().name}`, {
       headers: {
         Authorization: "Bearer " + token, //the token is a variable which holds the token
       },
@@ -110,7 +111,9 @@ export const deleteMessage2 = (roomId, messageId) => (dispatch) => {
       console.log(res.data);
       return dispatch({
         type: DELETE_MESSAGE2,
-        payload: res.data
+        payload: res.data,
+        threadId: roomId,
+        messageId: messageId,
       })}
     );
 };
