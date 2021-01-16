@@ -66,15 +66,10 @@ function findThreadIndex(threads, action) {
     }
     case ADD_MESSAGE2:
     case "ADD_MESSAGE": {
-      console.log(action.threadId);
       return threads.findIndex((t) => t._id === action.threadId);
     }
     case DELETE_MESSAGE2:
     case "DELETE_MESSAGE": {
-      console.log('findThreadIndex threads', threads);
-      console.log('findThreadIndex action', action);
-      console.log('action.id', action.threadId);
-      console.log('action.messageId', action.messageId);
       return threads.findIndex((t) =>
         t.messages.find((m) => m._id === action.messageId)
       );
@@ -87,25 +82,11 @@ function findThreadIndex(threads, action) {
 
 
 function threadsReducer(
-  state = [
-    // {
-    //   id: "3-xz25",
-    //   title: "All",
-    //   friend: "1-fca2",
-    //   users: [
-    //     { id: "1-fca2", title: "Buzz Aldrin" },
-    //     { id: "2-be91", title: "Michael Collins" },
-    //   ],
-    //   messages: messagesReducer(undefined, {}),
-    // },
-
-  ],
+  state = [],
   action
 ) {
   switch (action.type) {
     case ROOMS_LOADING: {
-       console.log('read rooms')
-       console.log(action.payload)
       return [...state,...action.payload];
     }
     case "ADD_NEWTHREAD": {
@@ -115,8 +96,8 @@ function threadsReducer(
           title: action.user1,
           friend: "2-qweassd",
           users: [
-            { id: "1-fca2", title: action.user1 },
-            { id: "2-be91", title: action.user2 },
+            { id: "1-fca2", name: action.user1 },
+            { id: "2-be91", name: action.user2 },
           ],
           messages: messagesReducer(undefined, {}),
         },
@@ -130,9 +111,7 @@ function threadsReducer(
     case "DELETE_MESSAGE": {
 
       const threadIndex = findThreadIndex(state, action);
-      console.log('thread index',threadIndex);
       const oldThread = state[threadIndex];
-      console.log('oldThread', oldThread);
       const newThread = {
         ...oldThread,
         messages: messagesReducer(oldThread.messages, action),
@@ -158,19 +137,10 @@ function messagesReducer(state = [], action) {
     }
     case ADD_MESSAGE2:
     case "ADD_MESSAGE": {
-      // const newMessage = {
-      //   text: action.text,
-      //   name: action.user,
-      //   timestamp: Date.now(),
-      //   id: uuid(),
-      //   unread: false,
-      // };
       return action.payload.messages;
     }
     case DELETE_MESSAGE2:
     case "DELETE_MESSAGE": {
-      console.log('delete messsage2 state', state);
-      console.log('delete messsage2 action', action);
       return action.payload.messages;
     }
     default: {

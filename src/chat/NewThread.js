@@ -21,19 +21,19 @@ class AddThread extends React.Component {
 
   addUser(name) {
     console.log("addUser", name);
-    this.state.group.some( user => user.title === name)
+    this.state.group.some( user => user.name === name)
 
       ? this.setState({
-          group: this.state.group.filter((user) => user.title !== name),
+          group: this.state.group.filter((user) => user.name !== name),
         })
 
-      : this.setState({ group: [{ title: name}, ...this.state.group] });
+      : this.setState({ group: [{ name: name }, ...this.state.group] });
   }
 
   addThread() {
-    let users = [{ title: isAuth().name}, ...this.state.group];
+    let users = [{ name: isAuth().name}, ...this.state.group];
     let qs = Object.keys(users)
-      .map((key) => `users[${key}][title]=${users[key].title}`)
+      .map((key) => `users[${key}][name]=${users[key].name}`)
       .join("&");
     this.props.addNewThread(qs);
   }
@@ -46,7 +46,7 @@ class AddThread extends React.Component {
           <p
             key={name}
             className={
-              this.state.group.some(user => user.title === name ) ? "selectUser" : "selectedUser"
+              this.state.group.some(user => user.name === name ) ? "selectUser" : "selectedUser"
             }
             onClick={() => this.addUser(name)}
           >

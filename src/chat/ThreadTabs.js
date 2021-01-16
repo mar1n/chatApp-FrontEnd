@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { openThread } from "../actions/ChatActions";
 import { readRooms } from "../actions/ChatActions";
+import { isAuth } from "../auth/helpers";
 
 const Tabs = (props) => {
   // useEffect(() => {
@@ -43,7 +44,7 @@ const mapStateToTabsProps = (state) => {
       id: t.id,
       unreadmsg: t.messages.reduce(
         (accu, current) =>
-          current.unread === false && current.name !== login ? accu + 1 : accu,
+          current.unread === false && current.name !== isAuth().name ? accu + 1 : accu,
         0
       ),
     }));

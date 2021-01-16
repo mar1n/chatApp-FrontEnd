@@ -122,7 +122,7 @@ export const resetUnreadmsg2 = (roomId, name) => (dispatch) => {
   dispatch(setItemsLoading);
   const token = getCookie("token");
   axios
-    .put(`${process.env.REACT_APP_API}/user/chat/room/message/${roomId}/${name}`, {
+    .put(`${process.env.REACT_APP_API}/user/chat/room/message/readAll/${roomId}/${name}`, {
       headers: {
         Authorization: "Bearer " + token, //the token is a variable which holds the token
       },

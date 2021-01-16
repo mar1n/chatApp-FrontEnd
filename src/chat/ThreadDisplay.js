@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import { connect } from "react-redux";
-import { addMessage, resetUnreadmsg, deleteMessage, readRooms, addMessage2, deleteMessage2, res } from "../actions/ChatActions";
+import { addMessage, resetUnreadmsg, resetUnreadmsg2, deleteMessage, readRooms, addMessage2, deleteMessage2, res } from "../actions/ChatActions";
 import { isAuth, signout } from "../auth/helpers";
 
 class TextFieldSubmit extends React.Component {
@@ -51,7 +51,7 @@ const MessageList = (props) => (
       className={
         props.messages.reduce(
           (accu, current) =>
-            current.unread === false && current.name !== props.user
+            current.unread === false && current.name !== isAuth().name
               ? accu + 1
               : accu,
           0
@@ -90,7 +90,7 @@ const mapStateToThreadProps = (state) => ({
 
 const mapDispatchToThreadProps = (dispatch) => ({
   //onMessageClick: (id) => dispatch(deleteMessage(id)),
-  onRead: (id, name) => dispatch(resetUnreadmsg(id, name)),
+  onRead: (id, name) => dispatch(resetUnreadmsg2(id, name)),
   dispatch: dispatch,
 });
 
@@ -103,8 +103,6 @@ function mergeThreadProps(stateProps, dispatchProps) {
         addMessage2(text, stateProps.thread._id, isAuth().name)
       ),
     onMessageClick: (id) => {
-      console.log('thread id', stateProps.thread._id);
-      console.log('message id', id);
        return dispatchProps.dispatch(
           deleteMessage2(stateProps.thread._id, id)
         )
@@ -114,9 +112,6 @@ function mergeThreadProps(stateProps, dispatchProps) {
 
 const ThreadDisplay = connect(
   mapStateToThreadProps,
-  // {
-  //   addMessage2
-  // },
   mapDispatchToThreadProps,
   mergeThreadProps
 )(Thread);
