@@ -44,7 +44,7 @@ const mapStateToTabsProps = (state) => {
       id: t.id,
       unreadmsg: t.messages.reduce(
         (accu, current) =>
-          current.unread === false && current.name !== isAuth().name ? accu + 1 : accu,
+          current.read.find(name => name.name === isAuth().name).unread === true ? accu : accu + 1,
         0
       ),
     }));
