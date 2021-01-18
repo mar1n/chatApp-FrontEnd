@@ -26,7 +26,7 @@ const Tabs = (props) => {
                   return null;
                 }).title} */}
                 {tab.title}
-            <span>{tab.unreadmsg}</span>
+            <span>{tab.unreadmsg === 0 ? '' : tab.unreadmsg}</span>
           </div>
         );
       })}

@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import ItemReducer from "./ItemReducer";
-import { ROOMS_LOADING, ADD_MESSAGE2, DELETE_MESSAGE2, ADD_THREAD } from "../actions/types";
+import { ROOMS_LOADING, ADD_MESSAGE2, DELETE_MESSAGE2, ADD_THREAD, UNREAD_MESSAGE2 } from "../actions/types";
 import { v4 as uuid } from "uuid";
 
 export default combineReducers({
@@ -61,6 +61,7 @@ function activeThreadIdReducer(state = null, action) {
 
 function findThreadIndex(threads, action) {
   switch (action.type) {
+    case UNREAD_MESSAGE2:
     case "RESET_MESSAGE": {
       return threads.findIndex((t) => t._id === action.id);
     }
@@ -108,10 +109,12 @@ function threadsReducer(
     case "RESET_MESSAGE":
     case ADD_MESSAGE2:
     case DELETE_MESSAGE2:
+    case UNREAD_MESSAGE2:
     case "DELETE_MESSAGE": {
 
       const threadIndex = findThreadIndex(state, action);
       const oldThread = state[threadIndex];
+      console.log('oldThread', oldThread);
       const newThread = {
         ...oldThread,
         messages: messagesReducer(oldThread.messages, action),
@@ -130,10 +133,9 @@ function threadsReducer(
 
 function messagesReducer(state = [], action) {
   switch (action.type) {
-    case "RESET_MESSAGE": {
-      return state.map((msg) =>
-        msg.name !== action.name ? { ...msg, unread: true } : msg
-      );
+    case UNREAD_MESSAGE2: {
+      console.log('unread')
+      return action.payload.messages;
     }
     case ADD_MESSAGE2:
     case "ADD_MESSAGE": {

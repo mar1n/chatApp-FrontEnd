@@ -51,9 +51,7 @@ const MessageList = (props) => (
       className={
         props.messages.reduce(
           (accu, current) =>
-            current.unread === false && current.name !== isAuth().name
-              ? accu + 1
-              : accu,
+          current.read.find(name => name.name === isAuth().name).unread === true ? accu : accu + 1,
           0
         )
           ? "unread"
@@ -76,7 +74,7 @@ const Thread = (props) =>{
         messages={props.thread.messages}
         user={props.userId}
         onClick={props.onMessageClick}
-        onRead={() => props.onRead(props.thread._id, props.userId)}
+        onRead={() => props.onRead(props.thread._id, isAuth().name)}
       />
       <TextFieldSubmit onSubmit={props.onMessageSubmit} />
     </div>

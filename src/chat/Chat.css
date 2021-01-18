@@ -7,3 +7,9 @@
 .active {
     background-color: aqua;
 }
+.unread {
+    color: orangered;
+}
+.read {
+    display: none;
+}

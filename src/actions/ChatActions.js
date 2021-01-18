@@ -119,10 +119,12 @@ export const deleteMessage2 = (roomId, messageId) => (dispatch) => {
 };
 
 export const resetUnreadmsg2 = (roomId, name) => (dispatch) => {
+  console.log('roomId', roomId);
+  console.log('name', name)
   dispatch(setItemsLoading);
   const token = getCookie("token");
   axios
-    .put(`${process.env.REACT_APP_API}/user/chat/room/message/readAll/${roomId}/${name}`, {
+    .put(`${process.env.REACT_APP_API}/user/chat/room/readAllMessage/${roomId}/${name}`, {
       headers: {
         Authorization: "Bearer " + token, //the token is a variable which holds the token
       },
@@ -131,7 +133,8 @@ export const resetUnreadmsg2 = (roomId, name) => (dispatch) => {
       console.log(res.data);
       return dispatch({
         type: UNREAD_MESSAGE2,
-        payload: res.data
+        payload: res.data,
+        id: roomId,
       })}
     );
 };
