@@ -8,6 +8,7 @@ class AddThread extends React.Component {
     super(props);
     this.state = {
       group: [],
+      newThreadName: '',
       oneUser: "",
     };
     this.addUser = this.addUser.bind(this);
@@ -32,12 +33,16 @@ class AddThread extends React.Component {
 
   addThread() {
     let users = [{ name: isAuth().name}, ...this.state.group];
+    let newThreadName = this.state.newThreadName;
     let qs = Object.keys(users)
       .map((key) => `users[${key}][name]=${users[key].name}`)
       .join("&");
-    this.props.addNewThread(qs);
+    this.props.addNewThread(qs, newThreadName);
   }
 
+  threadName(e) {
+    this.setState({newThreadName: e.target.value});
+  }
   render() {
     const { items } = this.props.item;
     return (
@@ -53,6 +58,7 @@ class AddThread extends React.Component {
             {name}
           </p>
         ))}
+        <input type="text" onChange={(e) => this.threadName(e)}/>
         <button onClick={() => this.addThread()}>Add New Thread</button>
       </div>
     );

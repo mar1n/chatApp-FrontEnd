@@ -90,20 +90,8 @@ function threadsReducer(
     case ROOMS_LOADING: {
       return [...state,...action.payload];
     }
-    case "ADD_NEWTHREAD": {
-      return [
-        {
-          id: uuid(),
-          title: action.user1,
-          friend: "2-qweassd",
-          users: [
-            { id: "1-fca2", name: action.user1 },
-            { id: "2-be91", name: action.user2 },
-          ],
-          messages: messagesReducer(undefined, {}),
-        },
-        ...state,
-      ];
+    case ADD_THREAD: {
+      return [...state,action.payload];
     }
     case "ADD_MESSAGE":
     case "RESET_MESSAGE":

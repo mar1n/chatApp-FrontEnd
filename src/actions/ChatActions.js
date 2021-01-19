@@ -124,7 +124,7 @@ export const resetUnreadmsg2 = (roomId, name) => (dispatch) => {
   dispatch(setItemsLoading);
   const token = getCookie("token");
   axios
-    .put(`${process.env.REACT_APP_API}/user/chat/room/readAllMessage/${roomId}/${name}`, {
+    .put(`${process.env.REACT_APP_API}/user/chat/room/readMessage/${roomId}/${name}`, {
       headers: {
         Authorization: "Bearer " + token, //the token is a variable which holds the token
       },
@@ -139,11 +139,11 @@ export const resetUnreadmsg2 = (roomId, name) => (dispatch) => {
     );
 };
 
-export const addNewThread = (users) => (dispatch) => {
+export const addNewThread = (users, newThreadName) => (dispatch) => {
   dispatch(setItemsLoading);
   const token = getCookie("token");
   axios
-    .put(`${process.env.REACT_APP_API}/user/chat/room/add?${users}`, {
+    .put(`${process.env.REACT_APP_API}/user/chat/room/add?${users}&newThreadName=${newThreadName}`, {
       headers: {
         Authorization: "Bearer " + token, //the token is a variable which holds the token
       },
