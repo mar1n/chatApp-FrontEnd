@@ -1,10 +1,17 @@
 import React, { Fragment, useEffect } from "react";
 import Layout from "./core/Layout";
 import { connect } from "react-redux";
-import { readRooms } from "./actions/ChatActions"
+import { readRooms } from "./actions/ChatActions";
+import io from "socket.io-client";
+let socket;
+
 const MainApp = () => {
-  useEffect(() => 
-    console.log('app')
+  useEffect(() => {
+    console.log('app');
+    socket = io.connect("http://localhost:8000", {transports: ['websocket', 'polling', 'flashsocket']})
+	   console.dir(socket)
+  }
+    
   , []);
   return (
     <Fragment>
