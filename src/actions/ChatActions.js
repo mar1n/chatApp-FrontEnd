@@ -40,6 +40,29 @@ export function switchUser(id) {
   };
 }
 
+/* Used only by actions for sockets */
+export const initialItems = (res) => ({
+	type: "INITIAL_ITEMS",
+	items: res
+})
+
+/***************************************************************************************** */
+/* Async Action items using - Sockets													   */
+/***************************************************************************************** */
+export const loadInitialDataSocket = (socket, id) => {
+	return (dispatch) => {
+		// dispatch(clearAllItems())
+    // console.log('socket id test', id);
+    // socket.emit('initialList', id);
+    socket.emit('listUsers', id);
+		socket.on('initialList',(res)=>{
+      console.log('initialList', res);
+		   console.dir(res)
+		   //dispatch(initialItems(res))
+	   })
+	}	
+}
+
 export const readUsers = () => (dispatch) => {
   console.log('name', isAuth().name);
   dispatch(setItemsLoading);

@@ -1,8 +1,9 @@
 import React from "react";
-import { readUsers, readRooms, addNewThread } from "../actions/ChatActions";
+import { readUsers, readRooms, addNewThread, loadInitialDataSocket, initialItems } from "../actions/ChatActions";
 import { isAuth } from "../auth/helpers";
 import { connect } from "react-redux";
-
+import io from "socket.io-client";
+let socket;
 class AddThread extends React.Component {
   constructor(props) {
     super(props);
@@ -16,6 +17,17 @@ class AddThread extends React.Component {
   }
 
   componentDidMount() {
+    socket = io.connect("http://localhost:8000", {transports: ['websocket', 'polling', 'flashsocket']});
+    console.dir(socket);
+    this.props.loadInitialDataSocket(socket, isAuth()._id);
+    socket.on('loadUsers',(res) => {
+      console.log('ultra TCP', res)
+    })
+    //this.props.initialItems();
+    // socket.on('ListLoad',(res)=>{
+    //   console.dir(res)
+    //   this.props.initialItems(res);
+    // })
     this.props.readUsers();
     this.props.readRooms();
   }
@@ -73,6 +85,8 @@ const NewThread = connect(mapStateToProps, {
   addNewThread,
   readUsers,
   readRooms,
+  loadInitialDataSocket,
+  initialItems,
 })(AddThread);
 
 export default NewThread;
