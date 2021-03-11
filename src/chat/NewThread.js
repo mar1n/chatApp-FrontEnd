@@ -2,8 +2,7 @@ import React from "react";
 import { readUsers, readRooms, addNewThread, loadInitialDataSocket, initialItems } from "../actions/ChatActions";
 import { isAuth } from "../auth/helpers";
 import { connect } from "react-redux";
-import io from "socket.io-client";
-let socket;
+import socket from "../socket";
 class AddThread extends React.Component {
   constructor(props) {
     super(props);
@@ -17,7 +16,6 @@ class AddThread extends React.Component {
   }
 
   componentDidMount() {
-    socket = io.connect("http://localhost:8000", {transports: ['websocket', 'polling', 'flashsocket']});
     console.dir(socket);
     this.props.loadInitialDataSocket(socket, isAuth()._id);
     socket.on('loadUsers',(res) => {

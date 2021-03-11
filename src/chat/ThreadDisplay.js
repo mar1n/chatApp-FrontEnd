@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import { connect } from "react-redux";
 import { addMessage, resetUnreadmsg, resetUnreadmsg2, deleteMessage, readRooms, addMessage2, deleteMessage2, res } from "../actions/ChatActions";
 import { isAuth, signout } from "../auth/helpers";
+import socket from "../socket";
 
 class TextFieldSubmit extends React.Component {
   state = {
@@ -16,6 +17,7 @@ class TextFieldSubmit extends React.Component {
 
   handleSubmit = () => {
     this.props.onSubmit(this.state.value);
+    console.log('textField', socket);
     this.setState({
       value: "",
     });
