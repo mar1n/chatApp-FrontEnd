@@ -1,6 +1,17 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { addMessage, resetUnreadmsg, resetUnreadmsg2, deleteMessage, readRooms, addMessage2, deleteMessage2, res } from "../actions/ChatActions";
+import {
+  addMessage,
+  resetUnreadmsg,
+  resetUnreadmsg2,
+  deleteMessage,
+  readRooms,
+  addMessage2,
+  addMessage3,
+  addMessage33,
+  deleteMessage2,
+  res,
+} from "../actions/ChatActions";
 import { isAuth, signout } from "../auth/helpers";
 import socket from "../socket";
 
@@ -8,6 +19,13 @@ class TextFieldSubmit extends React.Component {
   state = {
     value: "",
   };
+  componentDidMount() {
+    socket.on("messageAdded", (res) => {
+      console.log("messsageAdded", res);
+      console.log("props", this.props);
+      this.props.addMessageSocket(res);
+    });
+  }
 
   onChange = (e) => {
     this.setState({
@@ -17,7 +35,6 @@ class TextFieldSubmit extends React.Component {
 
   handleSubmit = () => {
     this.props.onSubmit(this.state.value);
-    console.log('textField', socket);
     this.setState({
       value: "",
     });
@@ -53,7 +70,10 @@ const MessageList = (props) => (
       className={
         props.messages.reduce(
           (accu, current) =>
-          current.read.find(name => name.name === isAuth().name).unread === true ? accu : accu + 1,
+            current.read.find((name) => name.name === isAuth().name).unread ===
+            true
+              ? accu
+              : accu + 1,
           0
         )
           ? "unread"
@@ -66,24 +86,27 @@ const MessageList = (props) => (
   </div>
 );
 
-const Thread = (props) =>{
+const Thread = (props) => {
   console.log(props.onSubmit);
-  return props.thread === undefined ? <></> :
-   (
-  props.close && (
-    <div className="ui center aligned basic segment">
-      <MessageList
-        messages={props.thread.messages}
-        user={props.userId}
-        onClick={props.onMessageClick}
-        onRead={() => props.onRead(props.thread._id, isAuth().name)}
-      />
-      <TextFieldSubmit onSubmit={props.onMessageSubmit} />
-    </div>
-  ))}
+  return props.thread === undefined ? (
+    <></>
+  ) : (
+    props.close && (
+      <div className="ui center aligned basic segment">
+        <MessageList
+          messages={props.thread.messages}
+          user={props.userId}
+          onClick={props.onMessageClick}
+          onRead={() => props.onRead(props.thread._id, isAuth().name)}
+        />
+        <TextFieldSubmit onSubmit={props.onMessageSubmit} addMessageSocket={props.addMessageSocket} />
+      </div>
+    )
+  );
+};
 
 const mapStateToThreadProps = (state) => ({
-  thread: state.threads.find(thread => thread.title === state.activeThreadId),
+  thread: state.threads.find((thread) => thread.title === state.activeThreadId),
   userId: state.loginUserId,
   close: state.closeThread,
 });
@@ -100,13 +123,16 @@ function mergeThreadProps(stateProps, dispatchProps) {
     ...dispatchProps,
     onMessageSubmit: (text) =>
       dispatchProps.dispatch(
-        addMessage2(text, stateProps.thread._id, isAuth().name)
+        // addMessage2(text, stateProps.thread._id, isAuth().name)
+        addMessage3(socket, text, stateProps.thread._id, isAuth().name)
       ),
+    addMessageSocket:(res) =>
+        dispatchProps.dispatch(
+          addMessage33(res)
+        ),
     onMessageClick: (id) => {
-       return dispatchProps.dispatch(
-          deleteMessage2(stateProps.thread._id, id)
-        )
-    }
+      return dispatchProps.dispatch(deleteMessage2(stateProps.thread._id, id));
+    },
   };
 }
 

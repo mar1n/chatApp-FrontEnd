@@ -100,6 +100,26 @@ export const readRooms = () => (dispatch) => {
     );
 };
 
+
+export const addMessage33 = (data) => ({
+  type: ADD_MESSAGE2,
+  payload: data.data,
+  text: data.text,
+  user: data.name,
+  threadId: data.id
+})
+
+export const addMessage3 = (socket, text, id, name) => {
+  return (dispatch) => {
+    let message = {
+      text,
+      id,
+      name
+    }
+    socket.emit('addMessage', message);
+  }
+}
+
 export const addMessage2 = (text, id, name) => (dispatch) => {
   dispatch(setItemsLoading);
   const token = getCookie("token");
